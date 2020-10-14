@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="fontys.fhict.nl.domain.TextFrequencyAnalizerTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-10-14T23:14:07" hostname="LAPTOP-I9DSV66L" time="0.013">
+  <properties/>
+  <testcase name="calculateFrequencyTest()" classname="fontys.fhict.nl.domain.TextFrequencyAnalizerTest" time="0.013"/>
+  <system-out><![CDATA[e: 8
+ : 4
+r: 2
+s: 2
+n: 2
+a: 2
+E: 1
+i: 1
+y: 1
+l: 1
+k: 1
+.: 1
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
