@@ -13,13 +13,10 @@ public class Main {
 
         TextFrequencyAnalizer analizer = new TextFrequencyAnalizer(text);
         List<FrequencyDataStructure> frequencyList = analizer.calculateFrequency();
-//int i=0;
-//        for (FrequencyDataStructure name: frequencyList){
-//            System.out.println(i++ + " " + name.getCharacter() + ": " + name.getFrequency());
-//        }
+
         System.out.println();
         HuffmanCode encoder = new HuffmanCode();
 
-        encoder.insertFrequencyListToPriorityQueue(frequencyList);
+        encoder.buildHuffmanCodeTree(frequencyList);
     }
 }

@@ -3,12 +3,34 @@ package fontys.fhict.nl.domain;
 public class HuffNode {
     // this object contains both character and its frequency
     private FrequencyDataStructure characterFrequency;
-    private HuffNode leftNode, RightNode;
+    private HuffNode leftNode, rightNode;
 
-    public HuffNode(FrequencyDataStructure characterFrequency, HuffNode leftNode, HuffNode rightNode) {
+    public HuffNode() {
+        this.characterFrequency = new FrequencyDataStructure();
+    }
+
+    @Override
+    public String toString() {
+        String text = "";
+        if(characterFrequency.getCharacter() == '\u0000')
+            text += "node";
+        else
+            text += "char: '" + characterFrequency.getCharacter() + "'";
+
+        text += " , frequency: " + characterFrequency.getFrequency();
+        return  text +
+                /*"\nleftNode: " + leftNode.characterFrequency.getCharacter() + ", " + leftNode.characterFrequency.getFrequency() +
+                "\nrightNode=" + rightNode.characterFrequency.getCharacter() + ", " + rightNode.characterFrequency.getFrequency() + */"\n";
+    }
+
+    public HuffNode(FrequencyDataStructure characterFrequency) {
         this.characterFrequency = characterFrequency;
+    }
+
+    public HuffNode(HuffNode leftNode, HuffNode rightNode) {
+        this.characterFrequency = new FrequencyDataStructure();
         this.leftNode = leftNode;
-        RightNode = rightNode;
+        this.rightNode = rightNode;
     }
 
     public FrequencyDataStructure getCharacterFrequency() {
@@ -28,10 +50,10 @@ public class HuffNode {
     }
 
     public HuffNode getRightNode() {
-        return RightNode;
+        return rightNode;
     }
 
     public void setRightNode(HuffNode rightNode) {
-        RightNode = rightNode;
+        this.rightNode = rightNode;
     }
 }
