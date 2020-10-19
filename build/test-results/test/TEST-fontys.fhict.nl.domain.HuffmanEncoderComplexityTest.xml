@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="fontys.fhict.nl.domain.HuffmanEncoderComplexityTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-10-18T21:12:09" hostname="LAPTOP-I9DSV66L" time="0.059">
+  <properties/>
+  <testcase name="decodingPerformanceTest()" classname="fontys.fhict.nl.domain.HuffmanEncoderComplexityTest" time="0.059"/>
+  <system-out><![CDATA[encoding done.
+Time execution: 0ms
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

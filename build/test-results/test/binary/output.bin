@@ -1,26 +1,2 @@
-
-char: 'E' , frequency: 1
-
-char: 'i' , frequency: 1
-
-char: 'l' , frequency: 1
-
-char: 'k' , frequency: 1
-
-char: 'y' , frequency: 1
-
-char: '.' , frequency: 1
-
-char: 'n' , frequency: 2
-
-char: 'a' , frequency: 2
-
-char: 'r' , frequency: 2
-
-char: 's' , frequency: 2
-
-char: ' ' , frequency: 4
-
-char: 'e' , frequency: 8
-
-0
+encoding done.
+Time execution: 0ms
