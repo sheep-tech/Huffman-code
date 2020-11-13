@@ -1,13 +1,11 @@
 package fontys.fhict.nl.domain;
 
-import fontys.fhict.nl.datastructure.FrequencyDataStructure;
+import fontys.fhict.nl.datastructure.CustomBitSet;
 import fontys.fhict.nl.datastructure.HuffmanTree;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class HuffmanEncoderComplexityTest {
     ArrayList<String> loadDictionary() throws IOException {
@@ -59,7 +57,7 @@ public class HuffmanEncoderComplexityTest {
 
         long start = System.currentTimeMillis();
 
-        String encodedMessage = encoder.encode(longText);
+        CustomBitSet encodedMessage = encoder.encode(longText);
 
         long end = System.currentTimeMillis();
         long duration = (end - start);
@@ -67,7 +65,7 @@ public class HuffmanEncoderComplexityTest {
         System.out.println("Time execution: " + duration + "ms");
         System.out.flush();
 
-        printEfficiency(encodedMessage.length(), longText.length());
+        printEfficiency(encodedMessage.getDataPosition().cardinality(), longText.length());
     }
 
     @Test
@@ -92,7 +90,7 @@ public class HuffmanEncoderComplexityTest {
 
         long start = System.currentTimeMillis();
 
-        String encodedMessage = encoder.encode(longText);
+        CustomBitSet encodedMessage = encoder.encode(longText);
 
         long end = System.currentTimeMillis();
         long duration = (end - start);
@@ -100,7 +98,7 @@ public class HuffmanEncoderComplexityTest {
         System.out.println("Time execution: " + duration + "ms");
         System.out.flush();
 
-        printEfficiency(encodedMessage.length(), longText.length());
+        printEfficiency(encodedMessage.getDataPosition().cardinality(), longText.length());
     }
 
     @Test
@@ -114,14 +112,15 @@ public class HuffmanEncoderComplexityTest {
         int encodedLength = 0;
         int byteLength = 0;
 
-        String encodedMessage, s, text = "";
+        CustomBitSet encodedMessage;
+        String s, text = "";
         while ((s= br.readLine())!= null) {
             text += s;
 
             byteLength += s.length()*8;
         }
         encodedMessage = encoder.encode(text);
-        encodedLength += encodedMessage.length();
+        encodedLength += encodedMessage.getDataPosition().cardinality();
         printEfficiency(encodedLength, byteLength);
     }
 
@@ -147,7 +146,7 @@ public class HuffmanEncoderComplexityTest {
         }
 
         System.out.println("encoding done.");
-        String encodedMessage = encoder.encode(longText);
+        CustomBitSet encodedMessage = encoder.encode(longText);
         HuffmanTree tree= encoder.getTree();
 
         long start = System.currentTimeMillis();
@@ -171,7 +170,8 @@ public class HuffmanEncoderComplexityTest {
         HuffmanEncoder encoder = new HuffmanEncoder();
 
 
-        String encodedMessage, s, text = "";
+        CustomBitSet encodedMessage;
+        String s, text = "";
         while ((s= br.readLine())!= null) {
             text += s;
 
@@ -204,7 +204,7 @@ public class HuffmanEncoderComplexityTest {
 
         int iter = 50000;
         String longText = new String();
-        TextFrequencyAnalizer analizer = new TextFrequencyAnalizer();
+        TextFrequencyAnalyzer analizer = new TextFrequencyAnalyzer();
 
         for (int i = 0; i < iter; i++) {
 
@@ -214,37 +214,6 @@ public class HuffmanEncoderComplexityTest {
         long start = System.currentTimeMillis();
 
         analizer.calculateFrequency(longText);
-
-        long end = System.currentTimeMillis();
-        long duration = (end - start);
-
-        System.out.println("Time execution: " + duration + "ms");
-        System.out.flush();
-    }
-
-    @Test //using a map instead
-    void textFrequencyAnalizerMapPerformanceTest() {
-        Random rand = new Random();
-
-        ArrayList<String> dictionary = null;
-        try {
-            dictionary = this.loadDictionary();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        int iter = 50000;
-        String longText = new String();
-        TextFrequencyAnalizer analizer = new TextFrequencyAnalizer();
-
-        for (int i = 0; i < iter; i++) {
-
-            longText += dictionary.get(rand.nextInt(69903));
-        }
-        System.out.println();
-        long start = System.currentTimeMillis();
-
-        analizer.calculateFrequencyMap(longText);
 
         long end = System.currentTimeMillis();
         long duration = (end - start);
@@ -266,9 +235,9 @@ public class HuffmanEncoderComplexityTest {
 
         int iter = 100000;
         String longText = new String();
-        TextFrequencyAnalizer analyzer = new TextFrequencyAnalizer();
+        TextFrequencyAnalyzer analyzer = new TextFrequencyAnalyzer();
         HuffmanEncoder encoder = new HuffmanEncoder();
-        List<FrequencyDataStructure> frequencyList = new ArrayList<>();
+        Map<Character, Integer> frequencyList = new HashMap<>();
 
         for (int i = 0; i < iter; i++) {
 

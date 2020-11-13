@@ -36,6 +36,13 @@ public class CustomBitSet {
             dataPosition.set(0, index-1);
     }
 
+    public void or(CustomBitSet b2) {
+        this.data.or(b2.getData());
+
+        this.dataPosition.clear();
+        this.dataPosition.set(0, b2.dataPosition.cardinality());
+    }
+
     public BitSet getData() {
         return data;
     }

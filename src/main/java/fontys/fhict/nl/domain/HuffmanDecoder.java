@@ -1,19 +1,20 @@
 package fontys.fhict.nl.domain;
 
+import fontys.fhict.nl.datastructure.CustomBitSet;
 import fontys.fhict.nl.datastructure.HuffmanLeaf;
 import fontys.fhict.nl.datastructure.HuffmanNode;
 import fontys.fhict.nl.datastructure.HuffmanTree;
 
 public class HuffmanDecoder {
-    private String encodedMessage;
-    private String decodedMessage = new String();
+    private CustomBitSet encodedMessage;
+    private String decodedMessage = "";
     private int index = 0;
 
     public HuffmanDecoder() {}
 
-    public String decode(String encodedMessage, HuffmanTree tree) {
+    public String decode(CustomBitSet encodedMessage, HuffmanTree tree) {
         this.encodedMessage = encodedMessage;
-        for (index = 0; index < this.encodedMessage.length(); index++) {
+        for (index = 0; index < this.encodedMessage.getDataPosition().cardinality(); index++) {
             getCharFromTree(tree);
         }
 
@@ -21,7 +22,7 @@ public class HuffmanDecoder {
     }
 
     private void getCharFromTree(HuffmanTree tree) {
-        if(index >= this.encodedMessage.length()) {
+        if(index >= this.encodedMessage.getDataPosition().cardinality()) {
             HuffmanLeaf leaf = (HuffmanLeaf)tree;
 
             this.decodedMessage += leaf.getCharacter();
@@ -29,7 +30,7 @@ public class HuffmanDecoder {
             return;
         }
 
-        char bit = this.encodedMessage.charAt(this.index);
+        boolean bit = this.encodedMessage.getData().get(this.index);
 
         if(tree.getCharacter() != '\u0000') {
             HuffmanLeaf leaf = (HuffmanLeaf)tree;
@@ -43,9 +44,11 @@ public class HuffmanDecoder {
             HuffmanNode node = (HuffmanNode)tree;
             this.index++;
 
-            if (bit == '1') {
+            if (bit) {
+                // go right
                 getCharFromTree(node.getRightNode());
             } else {
+                // go left
                 getCharFromTree(node.getLeftNode());
             }
         }

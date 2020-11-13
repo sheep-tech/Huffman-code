@@ -18,10 +18,36 @@ public class HuffmanEncoder {
         encodingMap = new HashMap<>();
     }
 
-    public HuffmanTree buildTree(List<FrequencyDataStructure> frequencyList) {
+    public CustomBitSet encode(String message) {
+        TextFrequencyAnalyzer analyzer = new TextFrequencyAnalyzer();
+
+        // analyze char frequency
+        Map<Character, Integer> frequencyList = analyzer.calculateFrequency(message);
+        // build huffman tree
+        this.tree = this.buildTree(frequencyList);
+        // generate coding map
+        this.generateEncodingMap(this.tree);
+        // encode char based on huffmanEncodingMap
+        int[] lastBitPosition = new int[1];
+        CustomBitSet codedMessage = new CustomBitSet();
+
+        // encoding
+        for (int i = 0; i < message.length(); i++) {
+            CustomBitSet code = this.encodingMap.get(message.charAt(i));
+            // right shift data in a mask
+            CustomBitSet maskedCode = this.maskedBitSet(code, lastBitPosition);
+            codedMessage.or(maskedCode);
+            //encodedMessage += parseBitSet(code.getData(), code.getDataPosition().cardinality());
+        }
+
+//        return fromString(encodedMessage);
+        return codedMessage;
+    }
+
+    public HuffmanTree buildTree(Map<Character, Integer> frequencyList) {
         // Set the priority queue
-        for(FrequencyDataStructure frequency : frequencyList) {
-            this.priorityQueue.add(new HuffmanLeaf(frequency.getFrequency(), frequency.getCharacter()));
+        for(Map.Entry<Character, Integer> frequency : frequencyList.entrySet()) {
+            this.priorityQueue.add(new HuffmanLeaf(frequency.getValue(), frequency.getKey()));
         }
 
 //        while(!this.priorityQueue.isEmpty())
@@ -37,89 +63,46 @@ public class HuffmanEncoder {
     }
 
     public Map<Character, CustomBitSet> generateEncodingMap(HuffmanTree tree) {
-        this.treeTraversal(tree, this.encodingBit);
+        this.treeTraversal(tree);
         return this.encodingMap;
     }
 
-    public void treeTraversal(HuffmanTree tree, CustomBitSet encodingBit) {
+    public void treeTraversal(HuffmanTree tree) {
         if (tree instanceof HuffmanLeaf) {
             HuffmanLeaf leaf = (HuffmanLeaf)tree;
 
-            CustomBitSet bitcode = new CustomBitSet();
-            bitcode.setData(this.encodingBit.getData());
-            bitcode.setDataPosition(this.encodingBit.getDataPosition());
+            CustomBitSet bitCode = new CustomBitSet();
+            bitCode.setData(this.encodingBit.getData());
+            bitCode.setDataPosition(this.encodingBit.getDataPosition());
 
-            this.encodingMap.put(leaf.getCharacter(), bitcode);
+            this.encodingMap.put(leaf.getCharacter(), bitCode);
 
         } else if (tree instanceof HuffmanNode) {
             HuffmanNode node = (HuffmanNode)tree;
 
             // go to left
             this.encodingBit.set(index++, false);
-            treeTraversal(node.getLeftNode(), encodingBit);
+            treeTraversal(node.getLeftNode());
             this.encodingBit.unsetLastBit(--index);
 
             // go to right
             this.encodingBit.set(index++, true);
-            treeTraversal(node.getRightNode(), encodingBit);
+            treeTraversal(node.getRightNode());
             this.encodingBit.unsetLastBit(--index);
         }
     }
 
+    public CustomBitSet maskedBitSet(CustomBitSet b2, int[] b1Length) {
+        CustomBitSet newBitSet = new CustomBitSet();
+        int b2Length = b2.getDataPosition().cardinality();
 
-    public String encode(String message) {
-        String encodedMessage = "";
-        TextFrequencyAnalizer analizer = new TextFrequencyAnalizer();
-
-        // analyze char frequency
-        List<FrequencyDataStructure> frequencyList = analizer.calculateFrequency(message);
-        // build huffman tree
-        this.tree = this.buildTree(frequencyList);
-        // generate coding map
-        this.generateEncodingMap(this.tree);
-        // encode char based on huffmanEncodingMap
-        int lastBitPosition = 0;
-        // encoding
-        for (int i = 0; i < message.length(); i++) {
-            CustomBitSet code = this.encodingMap.get(message.charAt(i));
-            // right shift data in a mask
-            //BitSet maskedCode = this.maskedBitSet(code.getData(),lastBitPosition, code.getDataPosition().cardinality());
-            encodedMessage += parseBitSet(code.getData(), code.getDataPosition().cardinality());
-        }
-
-//        return fromString(encodedMessage);
-        return encodedMessage;
-    }
-
-    public String parseBitSet(BitSet code, int length) {
-        String parsed = "";
-        for (int i = 0; i < length; i++) {
-            if (code.get(i))
-                parsed += "1";
-            else
-                parsed += "0";
-        }
-        return parsed;
-    }
-
-    private static BitSet fromString(String binary) {
-        BitSet bitset = new BitSet(binary.length());
-        for (int i = 0; i < binary.length(); i++) {
-            if (binary.charAt(i) == '1') {
-                bitset.set(i);
-            }
-        }
-        return bitset;
-    }
-
-    private BitSet maskedBitSet(BitSet b2, int b1Length, int b2Length) {
-        BitSet newBitSet = new BitSet();
-        for (int i = 0; i < b1Length+b2Length; i++) {
-            if (i < b1Length)
+        for (int i = 0; i < b1Length[0]+b2Length; i++) {
+            if (i < b1Length[0])
                 newBitSet.set(i, false);
             else
-                newBitSet.set(i, b2.get(i));
+                newBitSet.set(i, b2.getData().get(i - b1Length[0]));
         }
+        b1Length[0] += b2Length;
 
         return newBitSet;
     }
